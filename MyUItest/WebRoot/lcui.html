@@ -1,0 +1,763 @@
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link href="http://how2j.cn/study/css/bootstrap/3.3.6/bootstrap.min.css" rel="stylesheet">
+<style type="text/css">
+    body{margin:0px;background:#ddd;}
+    nav{margin:-20px 10px;}
+
+    #head{height:90px;background:#aaa;}
+    #left{width:200px;background:#eee;position:absolute;left:0;top:90px;bottom:0px;padding:1px;}
+    #table{position:absolute;right:0;left:200px;}
+    #edit{height:40px;background:#bbb;margin-left:200px;padding:3px;}
+    #dlgTest{border:solid 3px;width:900px;height:500px;display:none;background: #ffe;position:absolute;left:100px;z-index: 2000;}
+    html,body{
+        -moz-user-select: none;
+        -khtml-user-select: none;
+        user-select: none;
+    }
+    .page-normal{margin: 7px;font-size: 0}
+    .page-normal a{text-decoration: none;}
+    .page-prev:hover, .page-back:hover,.page-normal a:hover{background: #fc6;}
+    .page-normalHover{background: #fb9;}
+    .page-normal a, .page-prev, .page-back,.totalpage{
+        border:solid 1px;padding:8px 10px;font-size: 18px;
+    }
+    .mask {
+        position: absolute; top: 0px; filter: alpha(opacity=60); background-color: #777;
+        z-index: 1000; left: 0px;
+        opacity:0.5; -moz-opacity:0.5;
+    }
+
+</style>
+<body>
+<div id="mask" class="mask"></div>
+<div id="head"></div>
+        <div id="edit">
+        </div>
+        <div id="left">
+            <ul class="nav nav-pills nav-stacked">
+            </ul>
+        </div>
+        <div id="table">
+            <table style="width:100%">
+            </table>
+            <div class="page-normal">
+                <span class="page-prev">&lt;</span>
+                <span class="acontent">
+                </span>
+                <span class="page-back">&gt;</span>
+                <span class="totalpage">总页数</span>
+                <input id="inputpage" type="text" class="form-control" placeholder="输入页码"
+                       style="display:inline; width:90px;height: 38px">
+            </div>
+        </div>
+        <div id="dlgTest" class="dialog-title">
+            <input id="close" type="button" value="关闭">
+            <input id="alterSave" type="button" value="修改保存">
+            <input id="insertSave" type="button" value="添加保存"></br>
+            <span id="editSpan">
+                        <lable name="id">ID：</lable>
+                        <input type="text" id="id" name="id">
+
+                        <lable name="username">姓名：</lable>
+                         <input type="text" id="username" name="username">
+
+                         <lable name="age">年龄：</lable>
+                         <input type="text" id="age" name="age">
+
+                        <lable name="sex">性别：</lable>
+                        女<input type="radio"  value="女" name="sex">
+                        男<input type="radio" value="男" name="sex"> <br/><br/>
+
+                        <lable name="activity">活动：</lable>
+                        学习<input type="checkbox" name="activity" value="学习" >
+                        唱歌<input type="checkbox"  name="activity" value="唱歌" >
+                        dota<input type="checkbox" name="activity" value="dota" > <br/><br/>
+
+                        <lable name="birth">出生日期：</lable>
+                        <a class="input-group date" id="mydatetime">
+                        <input type="text"  id="birth" name="birth" style="width: 150px; height: 30px;" />
+                        <span class="input-group-addon" style="float: left; width: 50px; height: 30px;">
+                        <span class="glyphicon glyphicon-calendar"></span>
+                        </span>
+                        </a>
+            </span>
+        </div>
+</body>
+<!--<script src="http://code.jquery.com/jquery-1.9.1.min.js"></script>-->
+<!--<script src="../jquery-1.6.2.min.js"></script>-->
+<script src="https://cdn.bootcss.com/jquery/1.12.4/jquery.min.js"></script>
+<!--<script src="http://how2j.cn/study/js/jquery/2.0.0/jquery.min.js"></script>-->
+
+<script src="http://how2j.cn/study/js/bootstrap/3.3.6/bootstrap.min.js"></script>
+<link href="bootstrap_datetime控件/bootstrap-datetimepicker.min.css" rel="stylesheet" />
+<script src="bootstrap_datetime控件/moment-with-locales.js"></script>
+<script src="bootstrap_datetime控件/bootstrap-datetimepicker.min.js"></script>
+<script src="bootstrap_datetime控件/bootstrap-datetimepicker.zh-CN.js"></script>
+
+<script>
+    var tableEditPage=[
+        '<lable name="id">ID：</lable>'+
+        '<input type="text" id="id" name="id">'+
+
+        '<lable name="username">姓名：</lable>'+
+        ' <input type="text" id="username" name="username">'+
+
+        ' <lable name="age">年龄：</lable>'+
+        ' <input type="text" id="age" name="age">'+
+
+        '<lable name="sex">性别：</lable>'+
+        '女<input type="radio"  value="女" name="sex">'+
+        '男<input type="radio" value="男" name="sex"> <br/><br/>'+
+
+        '<lable name="activity">活动：</lable>'+
+        '学习<input type="checkbox" name="activity" value="学习" >'+
+        '唱歌<input type="checkbox"  name="activity" value="唱歌" >'+
+        'dota<input type="checkbox" name="activity" value="dota" > <br/><br/>'+
+
+        '<lable name="birth">出生日期：</lable>'+
+        '<a class="input-group date" id="mydatetime">'+
+        '<input type="text"  id="birth" name="birth" style="width: 150px; height: 30px;" />'+
+        ' <span class="input-group-addon" style="float: left; width: 50px; height: 30px;">'+
+        '<span class="glyphicon glyphicon-calendar"></span>'+
+        '</span>'+
+        '</a>'
+
+        ,
+        '<lable name="id">ID：</lable>'+
+        '<input type="text" id="id" name="id">'+
+
+        '<lable name="gradename">班级名：</lable>'+
+        '<input type="text" id="gradename" name="gradename">'+
+
+        '<lable name="stunum">学生数：</lable>'+
+        '<input type="text" id="stunum" name="stunum">'
+
+         ,
+        '<lable name="id">ID：</lable>'+
+        '<input type="text" id="id" name="id">'+
+
+        '<lable name="teachername">老师名：</lable>'+
+        '<input type="text" id="teachername" name="teachername">'+
+
+        '<lable name="gradeid">所属班级ID：</lable>'+
+        '<input type="text" id="gradeid" name="gradeid">'
+
+         ,
+        '<lable name="id">ID：</lable>'+
+        '<input type="text" id="id" name="id">'+
+
+        '<lable name="coursename">课程名：</lable>'+
+        '<input type="text" id="coursename" name="coursename">'+
+
+        '<lable name="teacherid">所属老师ID：</lable>'+
+        '<input type="text" id="teacherid" name="teacherid">'
+    ];
+    var userListtableHead={"id":"ID","username":"用户名","age":"年龄","sex":"性别","activity":"活动","birth":"出生日期"};
+
+//    userList=[
+//        {"id":1,"username":"老大","age":21,"sex":"男","activity":"学习","birth":"2017-08-21"},
+//        {"id":2,"username":"呃呃","age":22,"sex":"女","activity":"dota","birth":"2012-08-12"},
+//        {"id":3,"username":"散散","age":23,"sex":"男","activity":"学习,唱歌,dota","birth":"2013-06-11"},
+//        {"id":4,"username":"思思","age":24,"sex":"女","activity":"学习,dota","birth":"2012-08-01"},
+//        {"id":5,"username":"呜呜","age":25,"sex":"男","activity":"学习","birth":"2015-12-17"},
+//        {"id":6,"username":"呜呜","age":25,"sex":"男","activity":"学习","birth":"2015-12-17"},
+//        {"id":7,"username":"呜呜","age":25,"sex":"男","activity":"学习","birth":"2015-12-17"},
+//        {"id":8,"username":"呜呜","age":25,"sex":"男","activity":"学习","birth":"2015-12-17"},
+//        {"id":9,"username":"呜呜","age":25,"sex":"男","activity":"学习","birth":"2015-12-17"},
+//        {"id":10,"username":"呜呜","age":25,"sex":"男","activity":"学习","birth":"2015-12-17"},
+//        {"id":11,"username":"老大","age":21,"sex":"男","activity":"学习","birth":"2017-08-21"},
+//        {"id":12,"username":"呃呃","age":22,"sex":"女","activity":"dota","birth":"2012-08-12"},
+//        {"id":13,"username":"散散","age":23,"sex":"男","activity":"学习,唱歌,dota","birth":"2013-06-11"},
+//        {"id":14,"username":"思思","age":24,"sex":"女","activity":"学习,dota","birth":"2012-08-01"},
+//        {"id":15,"username":"呜呜","age":25,"sex":"男","activity":"学习","birth":"2015-12-17"}];
+//    var gradeListtableHead={"id":"ID","gradename":"班级名","stunum":"学生数"};
+	var gradeListtableHead;
+    var gradeList=[
+        {"id":1,"gradename":"老班","stunum":21},
+        {"id":2,"gradename":"呃班","stunum":22},
+        {"id":3,"gradename":"散班","stunum":23},
+        {"id":4,"gradename":"思班","stunum":24},
+        {"id":5,"gradename":"呜班","stunum":25},
+        {"id":6,"gradename":"呜班","stunum":25},
+        {"id":7,"gradename":"呜班","stunum":25},
+        {"id":8,"gradename":"呜班","stunum":25},
+        {"id":9,"gradename":"呜班","stunum":25}];
+
+    var teacherListtableHead={"id":"ID","teachername":"老师名","gradeid":"所属班ID"};
+    var teacherList=[
+        {"id":1,"teachername":"老老师","gradeid":9},
+        {"id":2,"teachername":"呃老师","gradeid":3},
+        {"id":3,"teachername":"散老师","gradeid":1},
+        {"id":4,"teachername":"思老师","gradeid":4},
+        {"id":5,"teachername":"呜老师","gradeid":8},
+        {"id":6,"teachername":"呜老师","gradeid":4},
+        {"id":7,"teachername":"呜老师","gradeid":4},
+        {"id":8,"teachername":"呜老师","gradeid":5},
+        {"id":9,"teachername":"呜老师","gradeid":2}];
+    var courseListtableHead={"id":"ID","coursename":"课程名","teacherid":"所属老师"};
+    var courseList=[
+        {"id":1,"coursename":"老课程","teacherid":9},
+        {"id":2,"coursename":"呃课程","teacherid":3},
+        {"id":3,"coursename":"散课程","teacherid":1},
+        {"id":4,"coursename":"思课程","teacherid":4},
+        {"id":5,"coursename":"呜课程","teacherid":8},
+        {"id":6,"coursename":"呜课程","teacherid":4},
+        {"id":7,"coursename":"呜课程","teacherid":4},
+        {"id":8,"coursename":"呜课程","teacherid":5},
+        {"id":9,"coursename":"呜课程","teacherid":2}];
+
+
+
+
+
+    //alert(tableHeadLength);
+	var listmenu2;
+	var tableHeadList;
+	var editmenu={"editButton":"编辑","delete":"删除"};
+	var listmenu={"userList":"用户表","gradeList":"班级表","teacherList":"老师表","courseList":"课程表"};
+	
+	var currenttable;
+	var total;
+	var currenttableHead;
+	var tableHeadLength;
+	
+	var pageLegth;       //每一页的数据个数
+    var totalpage;        //总页数
+    var currentPage;     //当前页的页数，目前在第几页
+    var lastPage;
+    
+    var userList;
+    var postkey;
+    $(function(){
+        postkey=Object.keys(listmenu)[0].substring(0,Object.keys(listmenu)[0].length-4);
+        $.post(
+                page=postkey+"/selectList.action?page=1&rows=15",
+                function(result){
+                    userList=result.list;
+                    total=result.total;  //json数据总个数
+                    //console.log(total);
+                $.post(
+                    page="tablehead/selectList.action?tablename="+postkey,
+                    function(result){
+                    userListtableHead=result.list[0].tablehead;
+					//alert(JSON.stringify(userListtableHead));
+					userListtableHead= eval("("+userListtableHead+")");
+                    
+                    listmenu2={"userList":userList,"gradeList":gradeList,"teacherList":teacherList,"courseList":courseList};
+                    tableHeadList={ "userListtableHead": userListtableHead,
+                                        "gradeListtableHead":   gradeListtableHead,
+                                        "teacherListtableHead": teacherListtableHead,
+                                         "courseListtableHead": courseListtableHead};
+                    
+
+
+                    currenttable=listmenu2[Object.keys(listmenu)[0]];
+
+                    //alert(total);
+                    currenttableHead=tableHeadList[Object.keys(tableHeadList)[0]];
+                    tableHeadLength=Object.keys(currenttableHead).length;    //表头数据，获取key的个数
+                    
+                    
+
+                    pageLegth=15;       //每一页的数据个数
+                    totalpage=Math.ceil(total/15);        //总页数
+                    console.log("总页数:"+totalpage+" 总数："+total);
+                    currentPage=1;     //当前页的页数，目前在第几页
+  
+                    
+                    //alert($('input[name="sex"]').attr("type"));
+
+                    for(var i=0;i<Object.keys(editmenu).length;i++) {  //为表头上面添加编辑，删除等按钮
+                        //alert(Object.keys(editmenu)[i] +", "+editmenu[i]);
+                        $("#edit").html( $("#edit").html()+
+                            '<input  id="'+Object.keys(editmenu)[i]+
+                                '" type="button" value='+editmenu[Object.keys(editmenu)[i]]+'>');
+                    }
+
+                    for(var i=0;i<Object.keys(listmenu).length;i++){   //为左边li，设置表选择列表控件
+                        $("#left ul").html( $("#left ul").html()+
+                            '<li id="'+Object.keys(listmenu)[i]+'"><a href="#">'+
+                                listmenu[Object.keys(listmenu)[i]]+'</a></li>');
+                    }
+                    $("#left li:first").addClass("active");  //默认第一个选中
+
+                    addButtonEvent();
+
+                    $(":button").attr("class","btn btn-success");
+                    $(":text").attr("class","form-control");
+                    $("#table table").attr("class","table");
+
+                    Datetime();    //编辑页日期控件初始化
+
+                    //alert(JSON.stringify(listmenu2[Object.keys(listmenu)[0]]));
+                    //alert(JSON.stringify(tableHeadList[Object.keys(tableHeadList)[0]]  ));
+                    fillTable(tableHeadList[Object.keys(tableHeadList)[0]],Object.keys(listmenu)[0]);    //填充表
+                    generatorPage();
+
+                }
+       	 );
+                
+       }); 
+    });
+    function generatorPage(){
+            lastPage=totalpage+1;
+            //console.log("lastPage"+lastPage);
+            $('.totalpage').html("总页数"+totalpage);
+            $(".acontent").html("");
+            if(totalpage>5) {
+
+                $(".acontent").html("<a href='#'>1</a><a href='#'>2</a><a href='#'>3</a>"+
+                "<a href='#'>4</a><a href='#'>5</a>"+
+                "<a href='#'>6</a>");
+                $(".page-prev").unbind();
+                $(".page-prev").click(function() {
+                    console.log("向前翻页");
+                    var pagenum=$(".page-normal a:visible");
+                    var length=pagenum.length;
+                    if(pagenum.eq(length-1).html()==totalpage) {
+                        $(".page-normal a").show();
+                    }
+                    if(pagenum.eq(0).html()>1) {
+                        for (var i = 0; i < 6; i++) {
+                            $(".page-normal a").eq(i).html($(".page-normal a").eq(i).html() - 6);
+                        }
+                    }
+                    pagenum.removeClass("page-normalHover");
+                    pagenum.eq(0).addClass("page-normalHover");
+                    currentPage=pagenum.eq(0).html();
+                    $.post(
+                            page=postkey+"/selectList.action?page="+currentPage+"&rows=15",
+                            function(result) {
+                                listmenu2[postkey+"List"] = result.list;
+                                fillTable(currenttableHead,postkey+"List");
+                            }
+                    );
+                });
+                $(".page-back").unbind();
+                $(".page-back").click(function(){
+                    var pagenum=$(".page-normal a:visible");
+                    var length=pagenum.length;
+                    if(pagenum.eq(length-1).html()!=totalpage) {
+                        for (var i = 0; i < 6; i++) {
+                            pagenum.eq(i).html(parseInt(pagenum.eq(i).html()) + 6);
+                            if (parseInt(pagenum.eq(i).html()) > totalpage) {
+                                pagenum.eq(i).hide();
+                            }
+                        }
+
+                        $(".page-back").removeClass("page-normalHover");
+                        pagenum.removeClass("page-normalHover");
+                        pagenum.eq(0).addClass("page-normalHover");
+                        currentPage=pagenum.eq(0).html();
+                        $.post(
+                                page=postkey+"/selectList.action?page="+currentPage+"&rows=15",
+                                function(result) {
+                                    listmenu2[postkey+"List"] = result.list;
+                                    fillTable(currenttableHead,postkey+"List");
+                                }
+                        );
+                    }
+                });
+            }
+            else{
+                $(".acontent").html("");
+                for(var i=1;i<=totalpage;i++){
+                    $(".acontent").html($(".acontent").html()+"<a href='#'>"+i+"</a>");
+                }
+            }
+            $(".page-normal a:visible").eq(0).addClass("page-normalHover");
+            $("#inputpage").unbind();
+            $("#inputpage").keydown(function (e) {
+                var curKey = e.which;
+                if (curKey == 13) {
+                    var inputpage=$(this).val();
+                    if($(this).val()>totalpage||$(this).val()<0){
+                        alert("总页数"+totalpage+"，重新输入");
+                        return;
+                    }else{
+                        $(".page-normal a").removeClass("page-normalHover");
+                        var index=Math.floor((inputpage-$(".page-normal a").eq(0).html())/6);
+                        var pagenum=$(".page-normal a");
+                        for (var i = 0; i < pagenum.length; i++) {
+                            pagenum.eq(i).html(parseInt(pagenum.eq(i).html()) + 6*index);
+                            if (parseInt(pagenum.eq(i).html()) > totalpage) {
+                                pagenum.eq(i).hide();
+                            }else{
+                                pagenum.eq(i).show();
+                            }
+                        }
+
+                        $(".page-normal a").each(function(){
+                            if($(this).html()==inputpage){
+                                $(this).addClass("page-normalHover");
+                                currentPage=inputpage;
+                                $.post(
+                                        page=postkey+"/selectList.action?page="+currentPage+"&rows=15",
+                                        function(result) {
+                                            listmenu2[postkey+"List"] = result.list;
+                                            fillTable(currenttableHead,postkey+"List");
+                                        }
+                                );
+                                return;
+                            }
+                        });
+                    }
+                }
+            });
+            addPageEvent();
+    }
+    function fillTable(tableHead,tableList){
+        for(var i=0;i<Object.keys(listmenu2).length;i++) {
+            if (tableList == Object.keys(listmenu2)[i]) {
+                tableHead =tableHeadList[Object.keys(tableHeadList)[i]];
+                tableList = listmenu2[Object.keys(listmenu2)[i]];
+            }
+        }
+
+
+        tableHeadLength=Object.keys(tableHead).length;
+        $("#table table").html('<tr id="tableHead">');
+
+        for(var i=0;i<tableHeadLength; i++) {    //表头填充
+            $("#tableHead").html(
+                    $("#tableHead").html()+
+                    "<th>" + tableHead[Object.keys(tableHead)[i]]+ "</th>"
+            );
+        }
+        var tabled;
+        for(var i=0;i<tableList.length; i++){
+            for(var j=0;j<tableHeadLength;j++) {
+                //if(i>=pageLegth)break;
+                //if(i>=pageLegth*currentPage)break;
+                tabled =tabled+ "<td>" + tableList[i][Object.keys(tableHead)[j]] + "</td>";
+            }
+
+            $("#table table").html( $("#table table").html()+"<tr class='mytabler'>"+
+                    tabled+
+                    "</tr>"
+            );
+            tabled=null;
+        }
+        addTableEvent();
+
+    }
+    function addPageEvent() {
+        $(".page-normal a").unbind();
+        $(".page-normal a").click(function () {
+            $(".page-normal a").removeClass("page-normalHover");
+            $(this).addClass("page-normalHover");
+            currentPage=parseInt($(this).html());
+
+            $.post(
+                    page=postkey+"/selectList.action?page="+currentPage+"&rows=15",
+                    function(result) {
+                        listmenu2[postkey+"List"] = result.list;
+                        fillTable(currenttableHead,postkey+"List");
+                    }
+            );
+        });
+    }
+    //设置日期时间控件
+    function Datetime() {
+        $('#mydatetime').datetimepicker({
+            language: 'zh-CN',//显示中文
+            format: 'yyyy-mm-dd',//显示格式
+            minView: "month",//设置只显示到月份
+            initialDate: new Date(),
+            autoclose: true,//选中自动关闭
+            todayBtn: true,//显示今日按钮
+            locale: moment.locale('zh-cn')
+        });
+        //默认获取当前日期
+        var today = new Date();
+        var nowdate = (today.getFullYear()) + "-" + (today.getMonth() + 1) + "-" + today.getDate();
+        //对日期格式进行处理
+        var date = new Date(nowdate);
+        var mon = date.getMonth() + 1;
+        var day = date.getDate();
+        var mydate = date.getFullYear() + "-" + (mon < 10 ? "0" + mon : mon) + "-" + (day < 10 ? "0" + day : day);
+        $("nowdate").val(mydate);
+    }
+    function addTableEvent() {
+        $("table tr[class='mytabler']").click(function () {//为表格的行添加点击事件
+            $("table tr").attr('bgcolor', null);
+            var tr = $(this);//找到tr原色
+            tr.attr('bgcolor', '#999');
+            $("table tr").attr('id',null);
+            tr.attr('id', 'selectTr');
+            var td = tr.find("td");//找到td元素
+            //console.log("td.length:"+td.length);
+            window.user={};
+            for(var i=0;i<tableHeadLength;i++) {
+                window.user[Object.keys(currenttableHead)[i]]=td[i].innerHTML;
+            }
+            //alert(JSON.stringify(window.user));
+        });
+    }
+    var draggingObj=null; //dragging Dialog
+    var diffX=0;
+    var diffY=0;
+
+    function down(e){
+        if(e.target.className.indexOf('dialog-title')!=-1){
+            draggingObj=e.target.offsetParent;
+            diffX=event.clientX-draggingObj.offsetLeft;
+            diffY=event.clientY-draggingObj.offsetTop;
+        }
+    }
+
+    function move(e){
+        var dialog=document.getElementById('dlgTest');
+        if(draggingObj){//只有点击Dialog Title的时候才能拖动
+            dialog.style.left=(e.clientX-diffX)+'px';
+            dialog.style.top=(e.clientY-diffY)+'px';
+        }
+    }
+
+    function up(e){
+        draggingObj=null;
+        diffX=0;
+        diffY=0;
+    }
+
+    document.addEventListener('mousedown',down);
+    document.addEventListener('mousemove',move);
+    document.addEventListener('mouseup',up);
+    function addButtonEvent() {
+        $('#close').click(function () {
+            $('#dlgTest').hide();
+            $('#mask').hide();
+            //$(":checkbox").attr("checked", false);
+            $(":checkbox").prop("checked", false);
+        });
+        $('#editButton').click(function () {
+            showMask();
+            $('#dlgTest').show();
+
+            //alert(JSON.stringify(window.user));
+            //alert(tableHeadLength);
+            for (var i = 0; i < tableHeadLength; i++) {
+                $("#" + Object.keys(currenttableHead)[i]).val(window.user[Object.keys(currenttableHead)[i]]);
+                var inputtype=$('input[name='+Object.keys(currenttableHead)[i]+']').attr("type");
+                if (inputtype == 'radio') {
+                    var radioval = window.user[Object.keys(currenttableHead)[i]];
+                    $('input:radio[name=' + Object.keys(currenttableHead)[i] + ']:checked').prop('checked',false);
+                    $('input[name=' + Object.keys(currenttableHead)[i] + '][value=' + radioval + ']').prop("checked", true);
+                }
+                if (Object.keys(currenttableHead)[i] == 'activity') {
+                    var actval = window.user[Object.keys(currenttableHead)[i]].split(',');
+                    for (var j = 0; j < actval.length; j++) {
+                        $(":checkbox[value=" + actval[j] + "]").prop("checked", true);
+                    }
+                }
+            }
+        });
+        $('#insertSave').click(function () {
+            total=total+1;
+            var lasttotalpage=totalpage;
+            totalpage=Math.ceil(total/15); //总页数
+            if(lasttotalpage!=totalpage){
+                generatorPage();
+            }
+            console.log("total:"+total+" totalpage:"+totalpage+" currentPage:"+currentPage);
+            var addTd;
+            var actcheck = $(":checkbox[name=activity]");
+            var s = '';
+            for (var i = 0; i < actcheck.length; i++) {
+                if (actcheck[i].checked)
+                    s += actcheck[i].value + ',';  //多选框如果选中，将value添加到变量s中
+            }
+            s = s.substring(0, s.length - 1);  //去掉最后一个逗号
+            for (var i = 0; i < tableHeadLength; i++) {
+                window.user[Object.keys(currenttableHead)[i]] = $("#" + Object.keys(currenttableHead)[i]).val();
+                if (Object.keys(currenttableHead)[i] == 'sex') {
+                    window.user[Object.keys(currenttableHead)[i]] = $("input[name=" + Object.keys(currenttableHead)[i] + "]:checked").val()
+                }
+                if (Object.keys(currenttableHead)[i] == 'activity') {
+                    window.user[Object.keys(currenttableHead)[i]] = s;
+                }
+                addTd = addTd + "<td>" + window.user[Object.keys(currenttableHead)[i]] + "</td>";
+            }
+            //console.log(addTd);
+            //alert(JSON.stringify(window.user));
+            if (currentPage == totalpage) {        //判断是否为最后一页，如果是，就往当前页添加
+                $("#table table").html($("#table table").html() + "<tr class='mytabler'>" +
+                        addTd +
+                        "</tr>"
+                );
+                addTableEvent();
+            } else {              //否则就跳转到最后一页，往最后一页添加
+                console.log("currentPage:"+currentPage);
+
+                $(".page-normal a").removeClass("page-normalHover");
+                var index=Math.floor((totalpage-$(".page-normal a").eq(0).html())/6);
+                var pagenum=$(".page-normal a");
+                for (var i = 0; i < pagenum.length; i++) {
+                    pagenum.eq(i).html(parseInt(pagenum.eq(i).html()) + 6*index);
+                    if (parseInt(pagenum.eq(i).html()) > totalpage) {
+                        pagenum.eq(i).hide();
+                    }
+                }
+                $(".page-normal a").each(function(){
+                    if($(this).html()==totalpage){
+                        $(this).addClass("page-normalHover");
+                        currentPage=totalpage;
+                        return;
+                    }
+                });
+
+
+                $.post(
+                        page=postkey+"/selectList.action?page="+currentPage+"&rows=15",
+                        function(result) {
+                            listmenu2[postkey+"List"] = result.list;
+                            fillTable(currenttableHead,postkey+"List");
+
+                            $("#table table").html($("#table table").html() + "<tr class='mytabler'>" +
+                                    addTd +
+                                    "</tr>"
+                            );
+                            addTableEvent();
+                        }
+                );
+
+            }
+            window.user["id"]=null;
+            $.post(
+                    page=postkey+"/save.action",    //发起添加请求，不传id表示添加
+                    window.user,
+                    function(result){
+
+
+                        console.log("insert:"+result+" total:"+total+" totalpage:"+totalpage);
+            });
+            $('#dlgTest').hide();
+            $('#mask').hide();
+
+        });
+        $('#delete').click(function () {
+            total=total-1;
+            var lasttotalpage=totalpage;
+            totalpage=Math.ceil(total/15); //总页数
+
+            if(lasttotalpage!=totalpage){
+                currentPage=totalpage;
+                generatorPage();
+                $(".page-normal a").removeClass("page-normalHover");
+                var index=Math.floor((currentPage-$(".page-normal a").eq(0).html())/6);
+                var pagenum=$(".page-normal a");
+                for (var i = 0; i < pagenum.length; i++) {
+                    pagenum.eq(i).html(parseInt(pagenum.eq(i).html()) + 6*index);
+                    if (parseInt(pagenum.eq(i).html()) > totalpage) {
+                        pagenum.eq(i).hide();
+                    }else{
+                        pagenum.eq(i).show();
+                    }
+                }
+
+                $(".page-normal a").each(function(){
+                    if($(this).html()==currentPage){
+                        $(this).addClass("page-normalHover");
+                        return;
+                    }
+                });
+            }
+            $.post(
+                    page=postkey+"/selectList.action?page="+currentPage+"&rows=15",
+                    function(result) {
+                        listmenu2[postkey+"List"] = result.list;
+                        fillTable(currenttableHead,postkey+"List");
+                        //addTableEvent();
+                    }
+            );
+
+            var delids=$('#selectTr').find("td")[0].innerHTML; //获取鼠标点选行的id
+            $.post(
+                    page=postkey+"/delete.action?delIds="+delids,
+               function(result){
+                console.log(JSON.stringify(result));
+            });
+            $('#selectTr').remove();
+        });
+
+        $('#alterSave').click(function () {
+            var addTd;
+            var actcheck = $(":checkbox[name=activity]");
+            var s = '';
+            for (var i = 0; i < actcheck.length; i++) {
+                if (actcheck[i].checked)
+                    s += actcheck[i].value + ',';  //如果选中，将value添加到变量s中
+            }
+            s = s.substring(0, s.length - 1);
+            for (var i = 0; i < tableHeadLength; i++) {
+                window.user[Object.keys(currenttableHead)[i]] = $("#" + Object.keys(currenttableHead)[i]).val();
+                if (Object.keys(currenttableHead)[i] == 'sex') {
+                    window.user[Object.keys(currenttableHead)[i]] = $("input[name=" + Object.keys(currenttableHead)[i] + "]:checked").val()
+                }
+                if (Object.keys(currenttableHead)[i] == 'activity') {
+                    window.user[Object.keys(currenttableHead)[i]] = s;
+                }
+                addTd = addTd + "<td>" + window.user[Object.keys(currenttableHead)[i]] + "</td>";
+            }
+            console.log("window.user:"+JSON.stringify(window.user));
+            console.log("selectTr:"+addTd);
+            $.post(
+                page=postkey+"/save.action",
+                window.user,
+                function(result){
+                console.log(result);
+            });
+            $('#selectTr').html(addTd);
+            $('#dlgTest').hide();
+            $('#mask').hide();
+        });
+        $("#left li").click(function () {
+            $("#left li").removeClass("active");
+            $(this).addClass("active");
+            var liid=$(this).attr("id");
+            postkey=liid.substring(0,liid.length-4); //更改当前请求url
+            console.log(postkey);
+            $.post(
+                page=postkey+"/selectList.action?page=1&rows=15",
+                function(result){
+                    //console.log(JSON.stringify(result));
+                    listmenu2[postkey+"List"]=result.list;
+                    total=result.total;
+                    totalpage=Math.ceil(total/15);        //总页数
+                    //console.log("total:"+total+" totalpage:"+totalpage);
+                    generatorPage();
+
+                    $.post(
+                            page="tablehead/selectList.action?tablename="+postkey,
+                            function(result){
+
+                                //console.log(JSON.stringify(result));
+                                //console.log(JSON.stringify(result.list[0].tablehead));
+                                //console.log(JSON.stringify(eval("("+result.list[0].tablehead+")")));
+
+                                tableHeadList[postkey+"ListtableHead"]=eval("("+result.list[0].tablehead+")");  //把ajax返回的表头数据，字符串转换成json
+
+                                    currenttableHead= tableHeadList[liid+"tableHead"];
+                                    //alert(JSON.stringify(currenttableHead));
+                                    //alert($(this).attr("id"));
+                                    fillTable(liid+"tableHead",liid);    //填充表
+                                for(var i=0;i<Object.keys(listmenu2).length;i++){
+                                    if(liid==Object.keys(listmenu2)[i]){
+                                        $("#editSpan").html(
+                                                tableEditPage[i]
+                                        );
+                                        Datetime();
+                                        $(":button").attr("class","btn btn-success");
+                                        $(":text").attr("class","form-control");
+                                    }
+                                }
+                            });
+                });
+        });
+    }
+    function showMask(){
+        $("#mask").css("height",$(document).height());
+        $("#mask").css("width",$(document).width());
+        $("#mask").show();
+    }
+</script>

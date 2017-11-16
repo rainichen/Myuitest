@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:aop="http://www.springframework.org/schema/aop"
+    xmlns:tx="http://www.springframework.org/schema/tx"
+    xmlns:context="http://www.springframework.org/schema/context"
+    xsi:schemaLocation="
+    http://www.springframework.org/schema/beans 
+    http://www.springframework.org/schema/beans/spring-beans-2.0.xsd
+    http://www.springframework.org/schema/tx 
+    http://www.springframework.org/schema/tx/spring-tx-2.0.xsd
+    http://www.springframework.org/schema/aop 
+    http://www.springframework.org/schema/aop/spring-aop-2.0.xsd
+    http://www.springframework.org/schema/context
+    http://www.springframework.org/schema/context/spring-context-3.2.xsd">
+<!-- 加载db.properties配置文件,命名要具有特殊规则 -->
+ <context:property-placeholder location="classpath:db.properties"/>
+ 
+<!-- 配置数据源 -->
+  <!-- 数据源，使用dbcp -->
+ 	<bean  id ="dataSource" class="org.apache.commons.dbcp.BasicDataSource"
+ 	    destroy-method="close">
+           <property  name ="driverClassName"  value ="${jdbc.driver}"/>
+           <property  name ="url"  value ="${jdbc.url}" />
+           <property  name ="username"  value ="${jdbc.username}" />
+           <property  name ="password"  value ="${jdbc.password}" />
+           <property  name ="maxActive"  value ="30" />
+		   <property  name ="maxIdle"  value ="5" />
+     </bean>
+<!-- sqlSessionFactory -->
+   <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+  	<!-- 加载mybatis配置文件 -->
+  	<property name="configLocation" value="classpath:mybatis/sqlMapConfig.xml"/>
+  	<!-- 数据源 -->
+  	<property name="dataSource" ref="dataSource"/>
+   </bean>
+<!-- mapper的扫描器 -->   
+	<!-- mapper的批量扫描，从mapper包中扫描mapper接口
+		，自动创建代理对象并且在spring容器中注册
+		遵循规范： 将mapper.xml和mapper.java映射文件名保持一致,且在同目录
+		自动扫描出来的mapper的bean的id为mapper类名首字母小写-->
+   	<bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+   		<!-- 指定扫描的包名
+   			如果扫描多个包，每个包用半角逗号隔开 -->
+   		<property name="basePackage" value="com.lcui.mapper"/>
+   		<property name="sqlSessionFactoryBeanName" value="sqlSessionFactory"/>
+   	</bean>   
+ 
+</beans>

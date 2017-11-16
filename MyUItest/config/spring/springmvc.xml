@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:p="http://www.springframework.org/schema/p"
+    xmlns:context="http://www.springframework.org/schema/context"
+    xmlns:aop="http://www.springframework.org/schema/aop"    
+    xmlns:jee="http://www.springframework.org/schema/jee"  
+    xmlns:tx="http://www.springframework.org/schema/tx" 
+    xmlns:mvc="http://www.springframework.org/schema/mvc"  
+    xmlns:jaxws="http://cxf.apache.org/jaxws"
+    xsi:schemaLocation="
+        http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-4.0.xsd  
+        http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.0.xsd  
+        http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.0.xsd  
+        http://www.springframework.org/schema/jee http://www.springframework.org/schema/jee/spring-jee-4.0.xsd  
+        http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-4.0.xsd
+        http://cxf.apache.org/jaxws http://cxf.apache.org/schemas/jaxws.xsd
+        http://www.springframework.org/schema/mvc 
+        http://www.springframework.org/schema/mvc/spring-mvc-3.0.xsd">  
+
+<!--可以扫描controller，service... 
+	这里扫描controller，指定controller的包 -->
+<context:component-scan base-package="com.lcui.controller"></context:component-scan>
+
+<!-- 注解映射器 -->
+<!-- <bean class="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping"/> -->
+<!-- 注解适配器 -->
+<!-- <bean class="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter"/> -->
+
+<!-- 使用mvc:annotation-driven代替上面的注解映射器和注解适配器
+	 mvc:annotation-driven默认加载很多的参数绑定方法，比如json转换解析器
+	 实际开发用此方法-->
+	 <mvc:annotation-driven conversion-service="conversionService"></mvc:annotation-driven>
+    
+    
+<!-- 视图解析器 
+	解析jsp，默认使用jstl，得有jstl包-->
+	<bean 
+		class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+		<!-- 配置前后缀 -->
+		<property name="prefix" value="/"/>
+		<property name="suffix" value=".jsp"/>
+	</bean>	
+<!-- 自定义参数绑定 -->
+	<bean id="conversionService" 
+			class="org.springframework.format.support.FormattingConversionServiceFactoryBean">
+		<!-- 转换器
+		<property name="converters">
+			<list>
+				 日期类型转换 
+				<bean class="cn.itcast.ssm.controller.converter.CustomDateConverter"/>
+			</list>
+		</property> -->	
+	</bean>
+
+	<!-- 文件上传解析器， 设置文件的最大尺寸为5MB 
+	<bean id="multipartResolver"
+		class="org.springframework.web.multipart.commons.CommonsMultipartResolver">		
+		<property name="maxUploadSize">
+			<value>5242880</value>
+		</property>
+	</bean>-->
+</beans>
